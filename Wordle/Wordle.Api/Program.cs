@@ -1,5 +1,3 @@
-using Autofac.Extensions.DependencyInjection;
-
 namespace Wordle.Api;
 
 public class Program
@@ -18,7 +16,6 @@ public class Program
         Console.WriteLine($"Start task with Environment: {environment}");
 
         return Host.CreateDefaultBuilder(args)
-            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .ConfigureAppConfiguration(builder =>
             {
                 builder.SetBasePath(Directory.GetCurrentDirectory())
