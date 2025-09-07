@@ -15,7 +15,7 @@ public abstract class E2ETestBase
         ServerFixture = serverFixture;
         HttpClient = new HttpClient
         {
-            BaseAddress = new Uri($"{serverFixture.BaseUrl}/api/")
+            BaseAddress = new Uri($"{serverFixture.ApiBaseUrl}/api/")
         };
     }
 

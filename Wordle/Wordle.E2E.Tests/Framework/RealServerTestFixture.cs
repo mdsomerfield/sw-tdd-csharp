@@ -6,28 +6,43 @@ namespace Wordle.E2E.Tests.Framework;
 
 public class RealServerTestFixture : IAsyncLifetime
 {
-    private IHost? _host;
-    private readonly int _port;
-    public string BaseUrl => $"http://localhost:{_port}";
+    private IHost? _apiHost;
+    private IHost? _webHost;
+    private readonly int _apiPort;
+    private readonly int _webPort;
+    
+    public string ApiBaseUrl => $"http://localhost:{_apiPort}";
+    public string WebBaseUrl => $"http://localhost:{_webPort}";
 
     public RealServerTestFixture()
     {
-        _port = GetAvailablePort();
+        _apiPort = GetAvailablePort();
+        _webPort = GetAvailablePort();
     }
 
     public async Task InitializeAsync()
     {
-        var args = new[] { $"--urls={BaseUrl}" };
-        _host = Program.CreateHostBuilder(args).Build();
-        await _host.StartAsync();
+        var apiArgs = new[] { $"--urls={ApiBaseUrl}" };
+        _apiHost = Wordle.Api.Program.CreateHostBuilder(apiArgs).Build();
+        await _apiHost.StartAsync();
+
+        var webArgs = new[] { $"--urls={WebBaseUrl}" };
+        _webHost = Wordle.Web.Program.CreateHostBuilder(webArgs).Build();
+        await _webHost.StartAsync();
     }
 
     public async Task DisposeAsync()
     {
-        if (_host != null)
+        if (_apiHost != null)
         {
-            await _host.StopAsync();
-            _host.Dispose();
+            await _apiHost.StopAsync();
+            _apiHost.Dispose();
+        }
+        
+        if (_webHost != null)
+        {
+            await _webHost.StopAsync();
+            _webHost.Dispose();
         }
     }
 
