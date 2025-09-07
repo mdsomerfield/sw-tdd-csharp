@@ -20,7 +20,6 @@ public class Startup
 
     public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UsePathBase("/api");
         app.UseRouting();
         app.UseEndpoints(endpoints =>
         {

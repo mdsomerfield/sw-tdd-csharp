@@ -1,3 +1,5 @@
+using Wordle.Web.Services;
+
 namespace Wordle.Web;
 
 public class Startup
@@ -11,6 +13,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddControllersWithViews();
+        services.AddHttpClient<IApiHealthService, ApiHealthService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -24,20 +28,9 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapGet("/", async context =>
-            {
-                context.Response.ContentType = "text/html";
-                await context.Response.WriteAsync(@"
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Wordle Web</title>
-</head>
-<body>
-    <h1>Hello World</h1>
-</body>
-</html>");
-            });
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
         });
     }
 }

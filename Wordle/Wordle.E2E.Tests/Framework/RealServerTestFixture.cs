@@ -1,6 +1,5 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Wordle.Api;
-using Xunit;
 
 namespace Wordle.E2E.Tests.Framework;
 
@@ -23,11 +22,11 @@ public class RealServerTestFixture : IAsyncLifetime
     public async Task InitializeAsync()
     {
         var apiArgs = new[] { $"--urls={ApiBaseUrl}" };
-        _apiHost = Wordle.Api.Program.CreateHostBuilder(apiArgs).Build();
+        _apiHost = Api.Program.CreateHostBuilder(apiArgs).Build();
         await _apiHost.StartAsync();
 
         var webArgs = new[] { $"--urls={WebBaseUrl}" };
-        _webHost = Wordle.Web.Program.CreateHostBuilder(webArgs).Build();
+        _webHost = Web.Program.CreateHostBuilder(webArgs).Build();
         await _webHost.StartAsync();
     }
 
