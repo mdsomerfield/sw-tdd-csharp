@@ -26,7 +26,15 @@ public class RealServerTestFixture : IAsyncLifetime
         await _apiHost.StartAsync();
 
         var webArgs = new[] { $"--urls={WebBaseUrl}" };
-        _webHost = Web.Program.CreateHostBuilder(webArgs).Build();
+        _webHost = Web.Program.CreateHostBuilder(webArgs)
+            .ConfigureAppConfiguration(builder =>
+            {
+                builder.AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["ApiBaseUrl"] = ApiBaseUrl
+                });
+            })
+            .Build();
         await _webHost.StartAsync();
     }
 
