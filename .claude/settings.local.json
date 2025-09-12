@@ -10,7 +10,15 @@
       "Bash(dotnet sln add:*)",
       "Bash(dotnet build:*)",
       "Bash(dotnet test:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(dotnet list:*)",
+      "Bash(playwright --version)",
+      "Bash(npx playwright:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(pwsh:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(del:*)"
     ],
     "deny": [],
     "ask": []

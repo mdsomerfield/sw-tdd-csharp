@@ -1,14 +1,19 @@
 using System.Text.Json;
 using FluentAssertions;
+using Microsoft.Playwright;
 using Xunit;
 
 namespace Wordle.E2E.Tests.Framework;
 
 [Collection("E2ETest")]
-public abstract class E2ETestBase
+public abstract class E2ETestBase : IAsyncLifetime
 {
     protected readonly HttpClient HttpClient;
     protected readonly RealServerTestFixture ServerFixture;
+    
+    private IPlaywright? _playwright;
+    private IBrowser? _browser;
+    protected IPage Page { get; private set; } = null!;
 
     protected E2ETestBase(RealServerTestFixture serverFixture)
     {
@@ -17,6 +22,25 @@ public abstract class E2ETestBase
         {
             BaseAddress = new Uri($"{serverFixture.ApiBaseUrl}")
         };
+    }
+
+    public async Task InitializeAsync()
+    {
+        _playwright = await Playwright.CreateAsync();
+        _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Headless = true
+        });
+        Page = await _browser.NewPageAsync();
+    }
+
+    public async Task DisposeAsync()
+    {
+        if (_browser != null)
+        {
+            await _browser.CloseAsync();
+        }
+        _playwright?.Dispose();
     }
 
     protected async Task<T?> GetAsync<T>(string endpoint)

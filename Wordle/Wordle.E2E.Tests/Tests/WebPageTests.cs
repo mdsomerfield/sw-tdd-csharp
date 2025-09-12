@@ -12,26 +12,59 @@ public class WebPageE2ETests : E2ETestBase
     [Fact]
     public async Task WebPage_ShouldReturn_200OK()
     {
-        using var webClient = new HttpClient();
+        var response = await Page.GotoAsync(ServerFixture.WebBaseUrl);
         
-        var response = await webClient.GetAsync(ServerFixture.WebBaseUrl);
-        
-        response.IsSuccessStatusCode.Should().BeTrue();
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.Should().NotBeNull();
+        response!.Ok.Should().BeTrue();
+        response.Status.Should().Be(200);
     }
 
     [Fact]
     public async Task WebPage_ShouldDisplay_StatusPageWithApiHealth()
     {
-        using var webClient = new HttpClient();
+        await Page.GotoAsync(ServerFixture.WebBaseUrl);
         
-        var response = await webClient.GetAsync(ServerFixture.WebBaseUrl);
-        var content = await response.Content.ReadAsStringAsync();
+        // Check page title
+        var title = await Page.TitleAsync();
+        title.Should().Contain("Wordle");
         
-        response.IsSuccessStatusCode.Should().BeTrue();
-        content.Should().Contain("Wordle Web Status");
-        content.Should().Contain("API Status:");
-        content.Should().Contain("Last Checked:");
-        content.Should().MatchRegex("API Status: <strong>(OK|Error)</strong>");
+        // Check for main heading
+        var heading = await Page.TextContentAsync("h1");
+        heading.Should().Contain("Wordle Web Status");
+        
+        // Check for API status elements
+        var apiStatusLabel = await Page.TextContentAsync("text=API Status:");
+        apiStatusLabel.Should().NotBeNull();
+        
+        // Check for status value (OK or Error)
+        var statusElement = await Page.QuerySelectorAsync("p:has-text('API Status:') strong");
+        statusElement.Should().NotBeNull();
+        var statusText = await statusElement!.TextContentAsync();
+        statusText.Should().BeOneOf("OK", "Error");
+        
+        // Check for Last Checked timestamp
+        var lastCheckedElement = await Page.QuerySelectorAsync("text=Last Checked:");
+        lastCheckedElement.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task WebPage_ShouldHaveCorrectStructure()
+    {
+        await Page.GotoAsync(ServerFixture.WebBaseUrl);
+        
+        // Check for proper HTML structure
+        var htmlElement = await Page.QuerySelectorAsync("html");
+        htmlElement.Should().NotBeNull();
+        
+        var bodyElement = await Page.QuerySelectorAsync("body");
+        bodyElement.Should().NotBeNull();
+        
+        // Check for container div
+        var containerElement = await Page.QuerySelectorAsync(".container");
+        containerElement.Should().NotBeNull();
+        
+        // Verify the page content is visible
+        var isVisible = await Page.IsVisibleAsync("h1");
+        isVisible.Should().BeTrue();
     }
 }
