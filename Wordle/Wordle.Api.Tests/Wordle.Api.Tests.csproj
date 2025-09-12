@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wordle.Api\Wordle.Api.csproj" />
+    <ProjectReference Include="..\Wordle.Web\Wordle.Web.csproj" />
   </ItemGroup>
 
 </Project>

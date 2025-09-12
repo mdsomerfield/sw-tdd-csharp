@@ -20,7 +20,7 @@ public abstract class E2ETestBase : IAsyncLifetime
         ServerFixture = serverFixture;
         HttpClient = new HttpClient
         {
-            BaseAddress = new Uri($"{serverFixture.ApiBaseUrl}")
+            BaseAddress = new Uri($"{serverFixture.WebBaseUrl}")
         };
     }
 
