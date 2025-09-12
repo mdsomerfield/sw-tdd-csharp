@@ -9,7 +9,6 @@ public class SystemController : ControllerBase
     [HttpGet("health")]
     public HealthCheckResponse HealthCheck()
     {
-        throw new InvalidOperationException();
         var response = new HealthCheckResponse
         {
             Ok = true,

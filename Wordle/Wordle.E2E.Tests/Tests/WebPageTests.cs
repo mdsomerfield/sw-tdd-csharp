@@ -10,7 +10,7 @@ public class WebPageE2ETests : E2ETestBase
     }
 
     [Fact]
-    public async Task WebPage_ShouldReturn_200OK()
+    public async Task HomePage_ShouldReturn_200OK()
     {
         var response = await Page.GotoAsync(ServerFixture.WebBaseUrl);
         
@@ -18,11 +18,21 @@ public class WebPageE2ETests : E2ETestBase
         response!.Ok.Should().BeTrue();
         response.Status.Should().Be(200);
     }
+    
+    [Fact]
+    public async Task StatusPage_ShouldReturn_200OK()
+    {
+        var response = await Page.GotoAsync($"{ServerFixture.WebBaseUrl}/Home/Status");
+        
+        response.Should().NotBeNull();
+        response!.Ok.Should().BeTrue();
+        response.Status.Should().Be(200);
+    }
 
     [Fact]
-    public async Task WebPage_ShouldDisplay_StatusPageWithApiHealth()
+    public async Task StatusPage_ShouldDisplay_ApiHealth()
     {
-        await Page.GotoAsync(ServerFixture.WebBaseUrl);
+        await Page.GotoAsync($"{ServerFixture.WebBaseUrl}/Home/Status");
         
         // Check page title
         var title = await Page.TitleAsync();
@@ -48,7 +58,7 @@ public class WebPageE2ETests : E2ETestBase
     }
 
     [Fact]
-    public async Task WebPage_ShouldHaveCorrectStructure()
+    public async Task HomePage_ShouldHaveCorrectStructure()
     {
         await Page.GotoAsync(ServerFixture.WebBaseUrl);
         
@@ -59,9 +69,9 @@ public class WebPageE2ETests : E2ETestBase
         var bodyElement = await Page.QuerySelectorAsync("body");
         bodyElement.Should().NotBeNull();
         
-        // Check for container div
-        var containerElement = await Page.QuerySelectorAsync(".container");
-        containerElement.Should().NotBeNull();
+        // Check for wordle-game div on home page
+        var wordleGameElement = await Page.QuerySelectorAsync(".wordle-game");
+        wordleGameElement.Should().NotBeNull();
         
         // Verify the page content is visible
         var isVisible = await Page.IsVisibleAsync("h1");

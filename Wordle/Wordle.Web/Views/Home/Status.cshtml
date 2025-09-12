@@ -1,0 +1,8 @@
+@model Wordle.Web.Models.ApiStatusModel
+@{
+    ViewData["Title"] = "Status Page";
+}
+
+<h1>Wordle Web Status</h1>
+<p>API Status: <strong>@Model.Status</strong></p>
+<p>Last Checked: @Model.LastChecked.ToString("yyyy-MM-dd HH:mm:ss") UTC</p>

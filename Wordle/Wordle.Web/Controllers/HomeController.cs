@@ -12,7 +12,12 @@ public class HomeController : Controller
         _apiHealthService = apiHealthService;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
+    {
+        return View();
+    }
+    
+    public async Task<IActionResult> Status()
     {
         var apiStatus = await _apiHealthService.GetApiStatusAsync();
         return View(apiStatus);
